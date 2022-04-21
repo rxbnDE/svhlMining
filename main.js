@@ -37,7 +37,7 @@ hafas.radar({
 
 	// create file prefix
 	d = new Date(),
-	prefix = pad(d.getFullYear(), 4)+"-"+pad(d.getMonth(), 2)+"-"+pad(d.getDay(), 2)+"-"+pad(d.getHours(), 2)+"-"+pad(d.getMinutes(), 2);
+	prefix = pad(d.getFullYear(), 4)+"-"+pad(d.getMonth()+1, 2)+"-"+pad(d.getDay(), 2)+"-"+pad(d.getHours(), 2)+"-"+pad(d.getMinutes(), 2);
 
 	// save radar json
 	saveFile('radar', prefix, journeys);
