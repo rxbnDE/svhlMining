@@ -15,10 +15,11 @@ const hafas = createHafas(withRetrying(withThrottling(nahsh, 5, 1000), {
 
 // filesystem access
 const fs = require('fs')
+const path = require('path')
 
 // util functions
 saveFile = (folder, prefix, data) => {
-	fs.writeFileSync(${process.env.STORAGE} + '/raw/'+folder+'/'+prefix+"_"+Date.now()+".json", JSON.stringify(data));
+	fs.writeFileSync(process.env.STORAGE + path.sep + folder + path.sep + prefix +"_"+Date.now()+".json", JSON.stringify(data));
 }
 pad = (x, n) => x.toString().padStart(n, '0');
 
