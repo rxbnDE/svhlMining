@@ -19,7 +19,9 @@ const path = require('path')
 
 // util functions
 saveFile = (folder, prefix, data) => {
-	fs.writeFileSync(process.env.STORAGE + path.sep + folder + path.sep + prefix +"_"+Date.now()+".json", JSON.stringify(data));
+	fullFolderPath = process.env.STORAGE + path.sep + folder;
+	if(!fs.existsSync(fullFolderPath)) fs.mkdirSync(fullFolderPath, { recursive: true });
+	fs.writeFileSync(fullFolderPath + path.sep + prefix +"_"+Date.now()+".json", JSON.stringify(data));
 }
 pad = (x, n) => x.toString().padStart(n, '0');
 
