@@ -20,7 +20,7 @@ if [[ $CHECK_VAR_FAILED -eq 1 ]]; then
 fi
 echo "check done"
 
-
+shopt -s nullglob
 
 ## find files in subfolder and move them to s3 bucket
 ## args:
