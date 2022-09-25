@@ -35,7 +35,7 @@ findFilesAndMove() {
 
 		# age check
 		AGEminutes=$((($(date +%s) - $(date +%s -r "$file")) / 60 ))
-		[[ ! $AGEminutes -gt 59 ]] && continue # continue, if file is not older than 59 minutes
+		[[ ! $AGEminutes -gt 10 ]] && continue # continue, if file is not older than 10 minutes
 
 		# move to s3
 		aws $S3_OPTS s3 mv "${file}" "s3://${S3_BUCKET}/$1/$filename"
