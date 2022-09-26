@@ -29,17 +29,7 @@ findFilesAndMove() {
 	echo "lets find files in \"$1\" which are older than an hour and move them"
 
 	pattern="${STORAGE}/$1";
-	for file in ${pattern}/*.json; do
-		[[ ! -e ${file} ]] && continue # continue, if file does not exist
-		filename="${file/"${pattern}/"/""}"
-
-		# age check
-		AGEminutes=$((($(date +%s) - $(date +%s -r "$file")) / 60 ))
-		[[ ! $AGEminutes -gt 10 ]] && continue # continue, if file is not older than 10 minutes
-
-		# move to s3
-		aws $S3_OPTS s3 mv "${file}" "s3://${S3_BUCKET}/$1/$filename"
-	done
+	aws $S3_OPTS s3 mv "${pattern}/" "s3://${S3_BUCKET}/$1/" --recursive --include "*.json"
 
 	echo "files completely processed in \"$1\""
 }
