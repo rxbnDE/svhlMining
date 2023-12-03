@@ -1,5 +1,5 @@
-node_modules/*
-raw/*
+node_modules
+storage/*
 package-lock.json
 log.log
 .env
