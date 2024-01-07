@@ -41,12 +41,18 @@ hafas.radar({
 	d = new Date(),
 	prefix = pad(d.getFullYear(), 4)+"-"+pad(d.getMonth()+1, 2)+"-"+pad(d.getDate(), 2)+"-"+pad(d.getHours(), 2)+"-"+pad(d.getMinutes(), 2);
 
+	// filter journeys and remove specific parameters
+	for(var j in journeys) {
+		delete journeys[j]["polyline"];
+	}
+
 	// save radar json
 	saveFile('radar', prefix, journeys);
 
 	// for each trip
 	journeys.forEach(journey => {
 		// query data
+		//console.log(prefix + " - "+ journey.tripId + " - " + journey.line.name);
 		hafas.trip(journey.tripId, journey.line.name).then((trip) => {
 			// save trip json
 			saveFile('trips', prefix, trip);
