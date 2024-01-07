@@ -1,14 +1,3 @@
-- var history = history
-- var state = state
-mixin history_item(item)
-	li.status(class=item.class)
-		if item.open
-			| geöffnet
-		else if item.closed
-			| geschlossen
-		else
-			| FEHLER
-		span.time(title=item.timeTitle)= item.timeFormatted
 doctype html
 html
 	head
@@ -16,15 +5,15 @@ html
 		meta(name="title", content=title)
 		title=title
 
-		link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css')
-		link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/ol@v8.2.0/ol.css')
+		link(rel='stylesheet', href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=", crossorigin="")
 		link(rel='stylesheet', href='/stylesheets/osm.css')
 	body
 		.map#map
 			#popup
+		#timePlot
 		#info
 		block scripts
-			script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js")
-			script(src="https://cdn.jsdelivr.net/npm/ol@v8.2.0/dist/ol.js")
+			script(src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js", integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=", crossorigin="")
+			script(src="https://cdn.plot.ly/plotly-2.27.0.min.js")
 			script(src="/js/osm.js")
 				

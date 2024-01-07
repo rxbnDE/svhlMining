@@ -102,6 +102,33 @@ methods.addTrip = async(obj) => {
 /**
  * @author Ruben Meyer
  * @async
+ * @return {Object} async(bool, err)
+ */
+methods.getRadarPlotData = async() => {
+	let Radar = models.radar;
+
+	start = new Date();
+	start.setHours(0, 0, 0, 0);
+	end = new Date();
+	end.setHours(23, 59, 59, 999);
+
+	try {
+		data = await Radar.find({
+			time: {
+				$gte: start,
+				$lt: end
+			}
+		}, {time: 1, noTrips: 1, _id: 0}).exec();
+
+		return {reply: data};
+	} catch(err) {
+		return {err: err};
+	}
+};
+
+/**
+ * @author Ruben Meyer
+ * @async
  * @param {Object} obj data obj
  * @return {Object} async(bool, err)
  */

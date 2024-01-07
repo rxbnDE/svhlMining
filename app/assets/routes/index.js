@@ -34,6 +34,11 @@ let getRoutes = async () => {
 		res.render('default', { title: 'Default page' });
 	});
 
+	router.get('/getRadarPlotData', async(req, res, next) => {
+		data = await db.getRadarPlotData();
+		res.send(JSON.stringify(data));
+	});
+
 	router.get('/getRadar', async (req, res, next) => {
 		data = await db.getLatestRadar();
 		res.send(JSON.stringify(data));

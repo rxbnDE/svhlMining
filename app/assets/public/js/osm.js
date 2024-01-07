@@ -1,95 +1,99 @@
-Map = ol.Map;
-Point = ol.geom.Point;
-View = ol.View;
-OSM = ol.source.OSM;
-TileLayer = ol.layer.Tile;
-VectorLayer = ol.layer.Vector;
-VectorSource = ol.source.Vector;
-Feature = ol.Feature;
-Overlay = ol.Overlay;
-useGeographic = ol.proj.useGeographic;
+expand = (s) => {
+    return (s.length == 1) ? "0"+s : s;
+};
 
-useGeographic();
+/**
+ * TimePlot
+ */
+timePlot = null;
+timeData = {x: [], y: []}
 
-const place = [-110, 45];
+/**
+ * 
+ * OSM
+ * 
+ */
+const coords = [53.8662,10.6870]
+var map = L.map('map').setView(coords, 10.5);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	maxZoom: 19,
+	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(map);
+L.circle(coords, {
+	color: 'red',
+	fillColor: '#f03',
+	fillOpacity: 0.5,
+	radius: 150
+}).addTo(map);
 
-const point = new Point(place);
+markers = L.layerGroup().addTo(map);
 
-const map = new Map({
-  target: 'map',
-  view: new View({
-    center: place,
-    zoom: 8,
-  }),
-  layers: [
-    new TileLayer({
-      source: new OSM(),
-    }),
-    new VectorLayer({
-      source: new VectorSource({
-        features: [new Feature(point)],
-      }),
-      style: {
-        'circle-radius': 9,
-        'circle-fill-color': 'red',
-      },
-    }),
-  ],
-});
+// updates OSM and TimePlot
+updates = () => {
+	// OSM
+	fetch('/getRadar')
+	.then(resp => resp.json())
+	.then(data => {
+		markers.clearLayers();
 
-const element = document.getElementById('popup');
+		for(trip of data.reply[0].trips) {
+			L.marker([trip.location.latitude, trip.location.longitude])
+			.addTo(markers)
+			.bindTooltip(trip.line.name + " - " + trip.direction)
+		}
 
-const popup = new Overlay({
-  element: element,
-  stopEvent: false,
-});
-map.addOverlay(popup);
+		console.log(data);
+	})
+	.catch(err => {
+		console.log("err");
+		console.error(err);
+	});
 
-function formatCoordinate(coordinate) {
-  return `
-    <table>
-      <tbody>
-        <tr><th>lon</th><td>${coordinate[0].toFixed(2)}</td></tr>
-        <tr><th>lat</th><td>${coordinate[1].toFixed(2)}</td></tr>
-      </tbody>
-    </table>`;
+	// TimePlot
+	fetch('/getRadarPlotData')
+	.then(resp => resp.json())
+	.then(data => {
+		console.log(data);
+		x = [];
+		y = [];
+		for(i = 0; i < data.reply.length; i++) {
+			radar = data.reply[i];
+			x.push(new Date(radar.time));
+			y.push(radar.noTrips);
+		}
+		timeData.x = x;
+		timeData.y = y;
+		console.log(timeData);
+		if(timePlot == null) {
+			timePlot = document.getElementById("timePlot");
+			Plotly.newPlot(timePlot, [{
+				x: timeData.x,
+				y: timeData.y,
+				fill: 'tozerox',
+				type: 'scatter'
+			}],
+			{
+				title: "History (no. Trips)",
+				font: { size: 18 },
+				sliders: [
+					{
+						x: 1,
+					}
+				]
+			},
+			{
+				responsive: true
+			});
+		} else {
+			Plotly.update(timePlot, timeData);
+		}
+	})
+	.catch(err => {
+		console.log("err");
+		console.error(err);
+	});
 }
 
-const info = document.getElementById('info');
-map.on('moveend', function () {
-  const view = map.getView();
-  const center = view.getCenter();
-  info.innerHTML = formatCoordinate(center);
-});
-
-let popover;
-map.on('click', function (event) {
-  if (popover) {
-    popover.dispose();
-    popover = undefined;
-  }
-  const feature = map.getFeaturesAtPixel(event.pixel)[0];
-  if (!feature) {
-    return;
-  }
-  const coordinate = feature.getGeometry().getCoordinates();
-  popup.setPosition([
-    coordinate[0] + Math.round(event.coordinate[0] / 360) * 360,
-    coordinate[1],
-  ]);
-
-  popover = new bootstrap.Popover(element, {
-    container: element.parentElement,
-    content: formatCoordinate(coordinate),
-    html: true,
-    offset: [0, 20],
-    placement: 'top',
-    sanitize: false,
-  });
-  popover.show();
-});
-
-map.on('pointermove', function (event) {
-  const type = map.hasFeatureAtPixel(event.pixel) ? 'pointer' : 'inherit';
-  map.getViewport().style.cursor = type;
-});
+// update every minute
+updates();
+setInterval(updates, 60 * 1000);
