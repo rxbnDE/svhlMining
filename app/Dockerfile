@@ -6,8 +6,5 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
-# Bundle app source
-COPY . .
-
 # start NPM
 CMD npm start
