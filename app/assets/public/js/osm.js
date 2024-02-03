@@ -35,14 +35,21 @@ updates = () => {
 	.then(resp => resp.json())
 	.then(data => {
 		markers.clearLayers();
+		console.log("getRadar", data);
 
 		for(trip of data.reply[0].trips) {
-			L.marker([trip.location.latitude, trip.location.longitude])
-			.addTo(markers)
-			.bindTooltip(trip.line.name + " - " + trip.direction)
+			marker = L.marker([trip.location.latitude, trip.location.longitude]).addTo(markers);
+			if(trip.line.name !== "Bus")
+				marker.bindTooltip(`${trip.line.name} - ${trip.direction}`);
+			else
+				marker.bindTooltip(`${trip.line.name} ${trip.line.id} - ${trip.direction}`);
+
+			// status degraded
+			if(typeof trip.nextStopovers[3] !== "undefined" && trip.nextStopovers[3].arrivalDelay == null)
+				marker._icon.classList.add("huechange");
 		}
 
-		console.log(data);
+		
 	})
 	.catch(err => {
 		console.log("err");
