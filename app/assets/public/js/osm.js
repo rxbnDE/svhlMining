@@ -46,7 +46,7 @@ updates = () => {
 
 			// status degraded
 			if(typeof trip.nextStopovers[3] !== "undefined" && trip.nextStopovers[3].arrivalDelay == null)
-				marker._icon.classList.add("huechange");
+				marker._icon.classList.add("degraded-state");
 		}
 
 		

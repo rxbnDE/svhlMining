@@ -6,3 +6,4 @@ td {
 	padding: 0 0.5em;
 	text-align: right;
 }
+img.degraded-state { filter: hue-rotate(120deg); }
