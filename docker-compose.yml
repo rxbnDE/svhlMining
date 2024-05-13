@@ -17,11 +17,12 @@ services:
       - mongodb
     build:
       context: app
-      dockerfile: ./app.Dockerfile
+      dockerfile: ./Dockerfile
+    command: /usr/src/app/docker.app.js
     restart: unless-stopped
     env_file: ./.env
     volumes:
-        - ./app:/app
+        - ./app:/usr/src/app
         - .env:/app/.env:ro
     ports:
       - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
@@ -39,11 +40,12 @@ services:
       - mongodb
     build:
       context: app
-      dockerfile: ./miner.Dockerfile
+      dockerfile: ./Dockerfile
+    command: /usr/src/app/docker.miner.js
     restart: unless-stopped
     env_file: ./.env
     volumes:
-        - ./app:/app
+        - ./app:/usr/src/app
         - .env:/app/.env:ro
     environment:
       - DB_HOST=mongodb

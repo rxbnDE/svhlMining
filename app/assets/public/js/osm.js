@@ -41,14 +41,39 @@ updates = () => {
 	.then(resp => resp.json())
 	.then(data => {
 		markers.clearLayers();
+		console.log("getRadar", data);
 
 		for(trip of data.reply[0].trips) {
-			L.marker([trip.location.latitude, trip.location.longitude])
-			.addTo(markers)
-			.bindTooltip(trip.line.name + " - " + trip.direction)
+			iconObj = {
+				iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-%%COLOR%%.png',
+				shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+				iconSize: [25, 41],
+				iconAnchor: [12, 41],
+				popupAnchor: [1, -34],
+				shadowSize: [41, 41]
+			};
+
+			// status degraded
+			if(typeof trip.nextStopovers[3] !== "undefined" && trip.nextStopovers[3].arrivalDelay == null) {
+				iconObj.iconUrl = iconObj.iconUrl.replace("%%COLOR%%", "red");
+				iconObj.iconSize = [18, 30];
+				iconObj.iconAnchor = [12, 30];
+				iconObj.popupAnchor = [1, -34],
+				iconObj.shadowSize = [30, 30];
+			} else {
+				iconObj.iconUrl = iconObj.iconUrl.replace("%%COLOR%%", "green");
+			}
+
+			icon = new L.Icon(iconObj);
+			marker = L.marker([trip.location.latitude, trip.location.longitude], {icon: icon});
+			marker.addTo(markers);
+			if(trip.line.name !== "Bus")
+				marker.bindTooltip(`${trip.line.name} - ${trip.direction}`);
+			else
+				marker.bindTooltip(`${trip.line.name} ${trip.line.id} - ${trip.direction}`);
 		}
 
-		console.log(data);
+		
 	})
 	.catch(err => {
 		console.log("err");

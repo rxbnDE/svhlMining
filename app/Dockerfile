@@ -1,10 +1,11 @@
 FROM node:19
 
-WORKDIR /app
+# cache pkgs
+WORKDIR /usr/src/cache
 
 # Install app dependencies
 COPY package*.json ./
 RUN npm install
 
-# start NPM
-CMD npm run start-miner
+# change workdir
+WORKDIR /usr/src/app

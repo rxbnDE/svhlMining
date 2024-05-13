@@ -1,15 +1,15 @@
 body {
-    font-family: sans-serif;
+	font-family: sans-serif;
 
-    background: #3a3a3a;
+	background: #3a3a3a;
 
-    margin: 0;
-    padding: 0;
+	margin: 0;
+	padding: 0;
 }
 
 header, main, footer {
 	width: 45%;
-    margin: 2em auto 0 auto;
+	margin: 2em auto 0 auto;
 }
 
 header {
@@ -22,67 +22,67 @@ header {
 }
 
 header h1 {
-    padding: .5em;
-    margin: 0;
-    display: table-cell;
+	padding: .5em;
+	margin: 0;
+	display: table-cell;
 }
 
 header h1 img {
-    display: block;
-    width: 50%;
+	display: block;
+	width: 50%;
 }
 
 header h2 {
-    border-left: 2px solid rgba(0, 0, 0, 0.2);
-    padding: 0.5em;
-    width: 200px;
-    margin: 0.5em auto 1em auto;
+	border-left: 2px solid rgba(0, 0, 0, 0.2);
+	padding: 0.5em;
+	width: 200px;
+	margin: 0.5em auto 1em auto;
 
-    text-align: center;
+	text-align: center;
 
-    display: table-cell;
-    vertical-align: middle;
+	display: table-cell;
+	vertical-align: middle;
 }
 
 header h2.open {
-    background: #08E318;
+	background: #08E318;
 }
 
 header h2.closed {
-    background: #E32E49;
+	background: #E32E49;
 }
 
 h2 .duration {
-    margin: 0.5em;
+	margin: 0.5em;
 }
 
 h2 .duration span {
-    background: #000;
-    color: #fff;
-    padding: 0.3em;
+	background: #000;
+	color: #fff;
+	padding: 0.3em;
 }
 
 h2.open .door-state {
-    color: rgba(0,0,0,0.75);
+	color: rgba(0,0,0,0.75);
 }
 
 h2.closed .door-state {
-    color: rgba(0,0,0,0.75);
+	color: rgba(0,0,0,0.75);
 }
 
 main {
-    margin: 2em auto 0 auto;
+	margin: 2em auto 0 auto;
 }
 
 ul {
-    padding: 0;
+	padding: 0;
 }
 
 li {
-    list-style: none;
-    text-indent: 0px;
+	list-style: none;
+	text-indent: 0px;
 
-    color: #111;
+	color: #111;
 }
 
 li.status.open {
