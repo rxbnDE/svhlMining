@@ -9,6 +9,12 @@ timePlot = null;
 timeData = {x: [], y: []}
 
 /**
+ * DelayPlot
+ */
+delayPlot = null;
+delayData = []
+
+/**
  * 
  * OSM
  * 
@@ -86,6 +92,58 @@ updates = () => {
 			});
 		} else {
 			Plotly.update(timePlot, timeData);
+		}
+	})
+	.catch(err => {
+		console.log("err");
+		console.error(err);
+	});
+
+	// delay plot
+	fetch('/getTripPlotData')
+	.then(resp => resp.json())
+	.then(data => {
+		console.log("getTripPlotData", data);
+
+		delayData = []
+		tripIds = {}
+		for(i = 0; i < data.reply.length; i++) {
+			delay = data.reply[i];
+			if(!(delay.trip.id in tripIds)) {
+				tripIds[delay.trip.id] = {
+					x: [],
+					y: [],
+					line: {shape: 'spline'},
+					//fill: 'tozerox',
+					name: delay.trip.line.name + " [" + delay.trip.direction + "]"
+				}
+			}
+			tripIds[delay.trip.id].x.push(new Date(delay.time));
+			tripIds[delay.trip.id].y.push(delay.trip.arrivalDelay/60.0);
+		}
+
+		for(trip in tripIds) {
+			delayData.push(tripIds[trip])
+		}
+		
+
+		if(delayPlot == null) {
+			delayPlot = document.getElementById("delayPlot");
+			Plotly.newPlot(delayPlot, delayData,
+			{
+				title: "Delay (in Min)",
+				font: { size: 18 },
+				sliders: [
+					{
+						x: 1,
+					}
+				]
+			},
+			{
+				responsive: true
+			});
+		} else {
+			Plotly.update(delayPlot, delayData);
 		}
 	})
 	.catch(err => {

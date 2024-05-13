@@ -38,6 +38,10 @@ let getRoutes = async () => {
 		data = await db.getRadarPlotData();
 		res.send(JSON.stringify(data));
 	});
+	router.get('/getTripPlotData', async (req, res, next) => {
+		data = await db.getTripPlotData();
+		res.send(JSON.stringify(data));
+	});
 
 	router.get('/getRadar', async (req, res, next) => {
 		data = await db.getLatestRadar();
