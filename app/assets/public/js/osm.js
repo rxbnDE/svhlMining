@@ -6,6 +6,10 @@ expand = (s) => {
  * TimePlot
  */
 timePlot = null;
+timePlotOptions = {
+	fill: 'tozerox',
+	type: 'scatter'
+};
 timeData = {x: [], y: []}
 
 /**
@@ -101,8 +105,7 @@ updates = () => {
 			Plotly.newPlot(timePlot, [{
 				x: timeData.x,
 				y: timeData.y,
-				fill: 'tozerox',
-				type: 'scatter'
+				...timePlotOptions
 			}],
 			{
 				title: "History (no. Trips)",
@@ -117,7 +120,9 @@ updates = () => {
 				responsive: true
 			});
 		} else {
-			Plotly.update(timePlot, timeData);
+			// console.log("timePlot", timePlot, timeData);
+			Plotly.deleteTraces(timePlot, 0);
+			Plotly.addTraces(timePlot, {...timeData, ...timePlotOptions});
 		}
 	})
 	.catch(err => {
@@ -169,7 +174,8 @@ updates = () => {
 				responsive: true
 			});
 		} else {
-			Plotly.update(delayPlot, delayData);
+			// console.log("delayPlot", delayPlot, delayData);
+			Plotly.react(delayPlot, delayData);
 		}
 	})
 	.catch(err => {
