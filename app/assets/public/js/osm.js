@@ -22,7 +22,8 @@ delayData = []
 const coords = [53.8662,10.6870]
 var map = L.map('map').setView(coords, 10.5);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	maxZoom: 19,
+	minZoom: 10,
+	maxZoom: 15,
 	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 L.circle(coords, {
