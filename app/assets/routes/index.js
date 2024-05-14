@@ -29,18 +29,35 @@ let getRoutes = async () => {
 	await db.connect();
 	let con = db.getConnection();
 
+	let cache = require('memory-cache');
+	let duration = 40;
+
 	// Default page
 	router.get('/default', async (req, res, next) => {
 		res.render('default', { title: 'Default page' });
 	});
 
 	router.get('/getRadarPlotData', async(req, res, next) => {
-		data = await db.getRadarPlotData();
-		res.send(JSON.stringify(data));
+		key = "radar-plot-data";
+		cached = cache.get(key);
+		if(cached) {
+			res.send(cached)
+		} else {
+			data = await db.getRadarPlotData();
+			cache.put(key, JSON.stringify(data), duration*1000);
+			res.send(JSON.stringify(data));
+		}
 	});
 	router.get('/getTripPlotData', async (req, res, next) => {
-		data = await db.getTripPlotData();
-		res.send(JSON.stringify(data));
+		key = "trip-plot-data";
+		cached = cache.get(key);
+		if(cached) {
+			res.send(cached)
+		} else {
+			data = await db.getTripPlotData();
+			cache.put(key, JSON.stringify(data), duration*1000);
+			res.send(JSON.stringify(data));
+		}
 	});
 
 	router.get('/getRadar', async (req, res, next) => {
