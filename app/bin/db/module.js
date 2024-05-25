@@ -108,16 +108,12 @@ methods.getTripPlotData = async() => {
 	let Trips = models.trips;
 
 	start = new Date();
-	start.setHours(0, 0, 0, 0);
-
-	end = new Date();
-	end.setHours(23, 59, 59, 999);
+	start.setDate(start.getDate()-1);
 
 	try {
 		data = await Trips.find({
 			time: {
-				$gte: start,
-				$lt: end
+				$gte: start
 			}
 		}, {'time': 1, 'trip.arrivalDelay': 1, 'trip.id': 1, 'trip.line.name': 1, 'trip.direction':1, '_id': 0}).exec();
 
@@ -136,16 +132,12 @@ methods.getRadarPlotData = async() => {
 	let Radar = models.radar;
 
 	start = new Date();
-	start.setHours(0, 0, 0, 0);
-	
-	end = new Date();
-	end.setHours(23, 59, 59, 999);
+	start.setDate(start.getDate()-1);
 
 	try {
 		data = await Radar.find({
 			time: {
-				$gte: start,
-				$lt: end
+				$gte: start
 			}
 		}, {time: 1, noTrips: 1, _id: 0}).exec();
 
