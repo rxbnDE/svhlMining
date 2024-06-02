@@ -17,9 +17,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../../assets/public')));
 
 var exp = async () => {
-	router = require('../../assets/routes/index');
-	routes = await router.routes();
-	app.use('/', routes);
+	page_router = require('../../assets/routes/page_routes');
+	page_routes = await page_router.routes();
+	app.use('/', page_routes);
+
+	api_router = require('../../assets/routes/api_routes');
+	api_routes = await api_router.routes();
+	app.use('/api', api_routes);
 
 	// catch 404 and forward to error handler
 	app.use(function(req, res, next) {

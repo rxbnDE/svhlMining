@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var debug = require('debug')('app:routes:index');
+var debug = require('debug')('app:routes:api');
 var moment = require('moment-timezone');
 var tz = "Europe/Berlin";
 
@@ -31,11 +31,6 @@ let getRoutes = async () => {
 
 	let cache = require('memory-cache');
 	let duration = 40;
-
-	// Default page
-	router.get('/default', async (req, res, next) => {
-		res.render('default', { title: 'Default page' });
-	});
 
 	router.get('/getRadarPlotData', async(req, res, next) => {
 		key = "radar-plot-data";
@@ -70,10 +65,6 @@ let getRoutes = async () => {
 		res.send(JSON.stringify(data));
 	});
 
-	// Dashboard page
-	router.get('/', async (req, res, next) => {
-		res.render('dashboard.pug', { title: 'Status Page'});
-	});
 	return router;
 }
 
