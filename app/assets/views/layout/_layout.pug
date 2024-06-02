@@ -1,0 +1,73 @@
+include _templates.pug
+doctype html
+html(lang="en").has-aside-left.has-aside-mobile-transition.has-navbar-fixed-top.has-aside-expanded
+	//- vars
+	block variables 
+		- var _ = null;
+		- var title = "Default Title";
+		- var breadcrumb = "Default/Bread";
+	head
+		block head
+			meta(charset="UTF-8")
+			meta(name="viewport", content="width=device-width, initial-scale=1")
+			meta(http-equiv="X-UA-Compatible", content="IE=edge")
+			title #{title} - SVM.rxbn.de
+			// link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css")
+			link(rel="stylesheet", href="/stylesheets/admin-one-bulma/main.min.css")
+			
+			//- Fonts
+			link(rel="dns-prefetch",href="https://fonts.gstatic.com")
+			link(rel="stylesheet",href="https://fonts.googleapis.com/css?family=Nunito")
+
+			//- icons
+			link(rel="stylesheet", href="https://cdn.materialdesignicons.com/4.9.95/css/materialdesignicons.min.css")
+
+			block stylesheets 
+
+	body
+		#app
+			nav#navbar-main.navbar.is-fixed-top
+				.navbar-brand
+					.navbar-item.is-hidden-desktop.jb-aside-mobile-toggle
+						span.icon
+							i.mdi.mdi-forwardburger.mdi-24px
+
+			aside.aside.is-placed-left.is-expanded
+				.aside-tools
+					.aside-tools-label
+						span
+							b SVM
+				.menu.is-menu-main
+					p.menu-label Quick Dashes
+					ul.menu-list
+						+aside("Overview", "/", "mdi-bus-stop")
+						+aside("Current Map", "/map", "mdi-radar")
+						+aside("Delay Information", "/delay", "mdi-bus-clock")
+					
+					p.menu-label Mooore
+					ul.menu-list
+						+aside("2FA", "#2fa")
+						+aside("Old page with all info", "/dashboard", "mdi-traffic-cone")
+					
+					p.menu-label About
+					ul.menu-list
+						+aside("Creator", "https://www.rxbn.de", "mdi-help-circle")
+			block breadcrumb
+				+breadcrumb(breadcrumb)
+			main
+				section.section.is-main-section
+					block content
+
+
+			footer.footer
+				.container-fluid
+					.level
+						.level-left
+						.level-right
+							.level-item 2024, rxbn.de
+							.level-item
+								a(href="https://www.github.com/rxbnDE/svhlMining", target="_blank")
+									img(src="https://img.shields.io/github/last-commit/rxbnDE/svhlMining?color=8A2BE2&logo=github")
+
+		block scripts
+			script(src="/js/page-functions.js", type="text/javascript")

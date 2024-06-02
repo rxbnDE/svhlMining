@@ -1,0 +1,23 @@
+mixin aside(title, href, icon, active)
+	-
+		if(typeof active == "undefined" && page_url == href)
+			active = "true"
+	li
+		a(href=href)(class=(typeof active=="string" && active!=="") ? "is-active router-link-active": "")(class=icon!=="" ? "has-icon": "")
+			if icon!==""
+				span.icon
+					i.mdi(class=icon)
+			span.menu-item-label=title
+			//- span=page_url
+
+mixin breadcrumb(breadcrumb)
+	section.section.is-title-bar
+		.level
+			.level-left
+				.level-item 
+					ul
+						- var bsplit = breadcrumb.split("/")
+						- const trimmer = (arr) => arr.map(el => el.trim());
+						- bsplit = trimmer(bsplit);
+						each b in bsplit
+							li=b
