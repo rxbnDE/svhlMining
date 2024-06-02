@@ -1,0 +1,133 @@
+extends layout/_layout
+append variables 
+	- var title = "Home";
+	- var breadcrumb = "General/Home";
+
+append content
+	.tile.is-ancestor
+		.tile.is-parent
+			.card.tile.is-child
+				.card-content
+					.level.is-mobile
+						.level-item
+							.is-widget-label
+								h3.subtitle.is-spaced Concurrent lines
+								h1.title#concurrent_lines --
+						.level-item
+							.is-widget-icon
+								.icon.has-text-primary.is-large
+									i.mdi.mdi-bus-multiple.mdi-48px
+		.tile.is-parent
+			.card.tile.is-child
+				.card-content
+					.level.is-mobile
+						.level-item
+							.is-widget-label
+								h3.subtitle.is-spaced Max concurrent lines
+								h1.title#max_concurrent_lines --
+						.level-item
+							.is-widget-icon
+								.icon.has-text-primary.is-large
+									i.mdi.mdi-trending-up.mdi-48px
+		.tile.is-parent
+			.card.tile.is-child
+				.card-content
+					.level.is-mobile
+						.level-item
+							.is-widget-label
+								h3.subtitle.is-spaced Median concurrent lines
+								h1.title#median_concurrent_lines --
+						.level-item
+							.is-widget-icon
+								.icon.has-text-primary.is-large
+									i.mdi.mdi-trending-neutral.mdi-48px
+	.card
+		header.card-header
+			p.card-header-title
+				span.icon
+					i.mdi.mdi-finance
+				span Concurrent Lines (as a Plot)
+			a(onclick="updates()").card-header-icon
+				span.icon
+					i.mdi.mdi-reload
+		.card-content
+			.chart-area
+				#timePlot
+
+append scripts
+	script(src="https://cdn.plot.ly/plotly-2.27.0.min.js")
+	script.
+		expand = (s) => {
+			return (s.length == 1) ? "0"+s : s;
+		};
+
+		const median = arr => {
+			const mid = Math.floor(arr.length / 2),
+			nums = [...arr].sort((a, b) => a - b);
+			return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
+		};
+
+		/**
+		* TimePlot
+		*/
+		timePlot = null;
+		timePlotOptions = {
+			fill: 'tozerox',
+			type: 'scatter'
+		};
+		timeData = {x: [], y: []}
+		updates = () => {
+
+			max_concurrent_lines = -1;
+			median_concurrent_lines = "--";
+			// TimePlot
+			fetch('/api/getRadarPlotData')
+			.then(resp => resp.json())
+			.then(data => {
+				console.log(data);
+				x = [];
+				y = [];
+				for(i = 0; i < data.reply.length; i++) {
+					radar = data.reply[i];
+					x.push(new Date(radar.time));
+					y.push(radar.noTrips);
+					if(radar.noTrips > max_concurrent_lines) max_concurrent_lines = radar.noTrips;
+				}
+				timeData.x = x;
+				timeData.y = y;
+
+				document.getElementById("concurrent_lines").innerText = data.reply[data.reply.length-1].noTrips;
+				document.getElementById("max_concurrent_lines").innerText = max_concurrent_lines;
+				document.getElementById("median_concurrent_lines").innerText = median(timeData.y);
+
+				if(timePlot == null) {
+					timePlot = document.getElementById("timePlot");
+					Plotly.newPlot(timePlot, [{
+						x: timeData.x,
+						y: timeData.y,
+						...timePlotOptions
+					}],
+					{
+						title: "History (no. Trips)",
+						font: { size: 18 },
+						sliders: [
+							{
+								x: 1,
+							}
+						]
+					},
+					{
+						responsive: true
+					});
+				} else {
+					// console.log("timePlot", timePlot, timeData);
+					Plotly.deleteTraces(timePlot, 0);
+					Plotly.addTraces(timePlot, {...timeData, ...timePlotOptions});
+				}
+			})
+			.catch(err => {
+				console.log("err");
+				console.error(err);
+			});
+		}
+		updates();
