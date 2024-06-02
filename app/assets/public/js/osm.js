@@ -1,5 +1,5 @@
 expand = (s) => {
-    return (s.length == 1) ? "0"+s : s;
+	return (s.length == 1) ? "0"+s : s;
 };
 
 /**
@@ -42,7 +42,7 @@ markers = L.layerGroup().addTo(map);
 // updates OSM and TimePlot
 updates = () => {
 	// OSM
-	fetch('/getRadar')
+	fetch('/api/getRadar')
 	.then(resp => resp.json())
 	.then(data => {
 		markers.clearLayers();
@@ -86,7 +86,7 @@ updates = () => {
 	});
 
 	// TimePlot
-	fetch('/getRadarPlotData')
+	fetch('/api/getRadarPlotData')
 	.then(resp => resp.json())
 	.then(data => {
 		console.log(data);
@@ -131,7 +131,7 @@ updates = () => {
 	});
 
 	// delay plot
-	fetch('/getTripPlotData')
+	fetch('/api/getTripPlotData')
 	.then(resp => resp.json())
 	.then(data => {
 		console.log("getTripPlotData", data);
