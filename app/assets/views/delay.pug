@@ -1,0 +1,155 @@
+extends layout/_layout
+append variables 
+	- var title = "Delay Information";
+	- var breadcrumb = "General/Delay Information";
+
+append content
+	.tile.is-ancestor
+		.tile.is-parent
+			.card.tile.is-child
+				.card-content
+					.level.is-mobile
+						.level-item
+							.is-widget-label
+								h3.subtitle.is-spaced Concurrent lines
+								h1.title#concurrent_lines --
+						.level-item
+							.is-widget-icon
+								.icon.has-text-primary.is-large
+									i.mdi.mdi-bus-multiple.mdi-48px
+		.tile.is-parent
+			.card.tile.is-child
+				.card-content
+					.level.is-mobile
+						.level-item
+							.is-widget-label
+								h3.subtitle.is-spaced Max departure delay in last scan
+								h1.title#max_delay --
+						.level-item
+							.is-widget-icon
+								.icon.has-text-primary.is-large
+									i.mdi.mdi-account-multiple.mdi-48px
+		.tile.is-parent
+			.card.tile.is-child
+				.card-content
+					.level.is-mobile
+						.level-item
+							.is-widget-label
+								h3.subtitle.is-spaced Average departure delay in last scan
+								h1.title#avg_delay --
+						.level-item
+							.is-widget-icon
+								.icon.has-text-primary.is-large
+									i.mdi.mdi-account-multiple.mdi-48px
+	.card
+		header.card-header
+			p.card-header-title
+				span.icon
+					i.mdi.mdi-finance
+				span Delay per Line (as a Plot)
+			a(onclick="updates()").card-header-icon
+				span.icon
+					i.mdi.mdi-reload
+		.card-content
+			.chart-area
+				#delayPlot
+
+append scripts
+	script(src="https://cdn.plot.ly/plotly-2.27.0.min.js")
+	script.
+		expand = (s) => {
+			return (s.length == 1) ? "0"+s : s;
+		};
+
+		const median = arr => {
+			const mid = Math.floor(arr.length / 2),
+			nums = [...arr].sort((a, b) => a - b);
+			return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
+		};
+
+		fetch('/api/getRadar')
+		.then(resp => resp.json())
+		.then(data => {
+				maxDelay = -1;
+				avgDelay = 0;
+				document.getElementById("concurrent_lines").innerText = data.reply[0].trips.length;
+
+				for(trip of data.reply[0].trips) {
+					if(maxDelay < trip.nextStopovers[1].departureDelay) maxDelay = trip.nextStopovers[1].departureDelay;
+					avgDelay += trip.nextStopovers[1].departureDelay;
+				}
+
+				if(avgDelay != 0) avgDelay /= data.reply[0].trips.length;
+
+				if(avgDelay != 0) avgDelay /= 60;
+				if(maxDelay != 0) maxDelay /= 60;
+				document.getElementById("max_delay").innerText = maxDelay + " min";
+				document.getElementById("avg_delay").innerText = avgDelay.toFixed(2) + " min";
+		})
+		.catch(err => {
+			console.log("err");
+			console.error(err);
+		});
+
+		/**
+		* DelayPlot
+		*/
+		delayPlot = null;
+		delayPlotOptions = {
+			fill: 'tozerox',
+			type: 'scatter'
+		};
+		delayData = []
+		updates = () => {
+			// delay plot
+			fetch('/api/getTripPlotData')
+			.then(resp => resp.json())
+			.then(data => {
+				console.log("getTripPlotData", data);
+
+				delayData = []
+				tripIds = {}
+				for(i = 0; i < data.reply.length; i++) {
+					delay = data.reply[i];
+					if(!(delay.trip.id in tripIds)) {
+						tripIds[delay.trip.id] = {
+							x: [],
+							y: [],
+							line: {shape: 'spline'},
+							//fill: 'tozerox',
+							name: delay.trip.line.name + " [" + delay.trip.direction + "]"
+						}
+					}
+					tripIds[delay.trip.id].x.push(new Date(delay.time));
+					tripIds[delay.trip.id].y.push(delay.trip.arrivalDelay/60.0);
+				}
+
+				for(trip in tripIds) {
+					delayData.push(tripIds[trip])
+				}
+				
+
+				if(delayPlot == null) {
+					delayPlot = document.getElementById("delayPlot");
+					Plotly.newPlot(delayPlot, delayData,
+					{
+						sliders: [
+							{
+								x: 1,
+							}
+						]
+					},
+					{
+						responsive: true
+					});
+				} else {
+					// console.log("delayPlot", delayPlot, delayData);
+					Plotly.react(delayPlot, delayData);
+				}
+			})
+			.catch(err => {
+				console.log("err");
+				console.error(err);
+			});
+		}
+		updates();
