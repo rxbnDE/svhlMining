@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   mongodb:
-    image: mongo:${MONGODB_VER:-6.0.12}
+    image: mongo:${MONGODB_VER:-7.0.14}
     restart: unless-stopped
     environment:
       - MONGO_INITDB_ROOT_USERNAME=$MONGODB_USER
