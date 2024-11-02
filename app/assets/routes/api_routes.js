@@ -30,7 +30,7 @@ let getRoutes = async () => {
 	let con = db.getConnection();
 
 	let cache = require('memory-cache');
-	let duration = 40;
+	let duration = 135;
 
 	router.get('/getRadarPlotData', async(req, res, next) => {
 		key = "radar-plot-data";
