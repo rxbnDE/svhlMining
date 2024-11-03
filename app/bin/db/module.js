@@ -227,6 +227,42 @@ methods.getLatestTrips = async(obj) => {
 	}
 }
 
+/**
+ * @author Ruben Meyer
+ * @async
+ * @param {Object} obj data obj
+ * @return {Object} async(bool, err)
+ */
+methods.getTripById = async(obj) => {
+	let Trips = models.trips;
+
+	try {
+		data = await Trips.find({_id: obj.id}).limit(1).exec();
+
+		return {reply: data};
+	} catch(err) {
+		return {err: err};
+	}
+}
+
+/**
+ * @author Ruben Meyer
+ * @async
+ * @param {Object} obj data obj
+ * @return {Object} async(bool, err)
+ */
+methods.getRadarById = async(obj) => {
+	let Radar = models.radar;
+
+	try {
+		data = await Radar.find({_id: obj.id}).limit(1).exec();
+
+		return {reply: data};
+	} catch(err) {
+		return {err: err};
+	}
+}
+
 
 //  ////////  ////////  ////////  ////////  ////////
 //  //           //     //    //     //     //

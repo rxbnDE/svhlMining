@@ -65,6 +65,25 @@ let getRoutes = async () => {
 		res.send(JSON.stringify(data));
 	});
 
+	router.get('/getTripById', async (req, res, next) => {
+		if(typeof req.query.id !== undefined) {
+			data = await db.getTripById({id: req.query.id});
+			res.send(JSON.stringify(data));
+		} else {
+			res.send("lol");
+		}
+	});
+
+	router.get('/getRadarById', async (req, res, next) => {
+		if(typeof req.query.id !== undefined) {
+			data = await db.getRadarById({id: req.query.id});
+			res.send(JSON.stringify(data));
+		} else {
+			res.send("lol");
+		}
+	});
+
+
 	return router;
 }
 
