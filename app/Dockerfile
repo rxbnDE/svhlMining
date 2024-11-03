@@ -1,4 +1,4 @@
-FROM node:19
+FROM node:23
 
 # cache pkgs
 WORKDIR /usr/src/cache
