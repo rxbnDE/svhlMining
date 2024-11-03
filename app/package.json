@@ -6,21 +6,20 @@
   "author": "rxbn.de",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.20.2",
-    "cookie-parser": "^1.4.6",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "cron": "^3.1.6",
-    "debug": "^4.3.4",
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2",
+    "cron": "^3.1.8",
+    "debug": "^4.3.7",
+    "dotenv": "^16.4.5",
+    "express": "^5.0.1",
     "http-errors": "^2.0.0",
     "memory-cache": "^0.2.0",
-    "moment": "^2.29.4",
-    "moment-timezone": "^0.5.43",
+    "moment": "^2.30.1",
+    "moment-timezone": "^0.5.46",
     "mongo-sanitize": "^1.1.0",
-    "mongoose": "^8.0.2",
+    "mongoose": "^8.8.0",
     "morgan": "^1.10.0",
     "nahsh-hafas": "^5.0.0",
-    "pug": "^3.0.2"
+    "pug": "^3.0.3"
   }
 }
