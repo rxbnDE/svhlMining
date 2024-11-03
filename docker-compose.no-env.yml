@@ -18,7 +18,7 @@ services:
     command: /usr/src/app/docker.app.js
     restart: unless-stopped
     volumes:
-        - ./app:/usr/src/app
+        - ./app:/usr/src/app:ro
         - .env:/app/.env:ro
     ports:
       - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
@@ -40,7 +40,7 @@ services:
     command: /usr/src/app/docker.miner.js
     restart: unless-stopped
     volumes:
-        - ./app:/usr/src/app
+        - ./app:/usr/src/app:ro
         - .env:/app/.env:ro
     environment:
       - DB_HOST=mongodb
