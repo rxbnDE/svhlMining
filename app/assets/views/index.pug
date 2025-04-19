@@ -87,8 +87,9 @@ append scripts
 				console.log(data);
 				x = [];
 				y = [];
-				for(i = 0; i < data.reply.length; i++) {
-					radar = data.reply[i];
+				reply = [...data.reply].sort((a,b) => new Date(b.time) - new Date(a.time));
+				for(i = 0; i < reply.length; i++) {
+					radar = reply[i];
 					x.push(new Date(radar.time));
 					y.push(radar.noTrips);
 					if(radar.noTrips > max_concurrent_lines) max_concurrent_lines = radar.noTrips;

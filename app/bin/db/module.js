@@ -139,7 +139,7 @@ methods.getRadarPlotData = async() => {
 			time: {
 				$gte: start
 			}
-		}, {time: 1, noTrips: 1, _id: 0}).exec();
+		}, {time: 1, noTrips: 1, _id: 0}).sort({ time: -1}).exec();
 
 		return {reply: data};
 	} catch(err) {
