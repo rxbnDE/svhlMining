@@ -24,7 +24,7 @@ services:
       - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
     environment:
       - WEB_PORT=$NODE_DOCKER_PORT
-      - DB_HOST=mongodb
+      - DB_HOST=$MONGODB_HOST
       - DB_USER=$MONGODB_USER
       - DB_PASSWORD=$MONGODB_PASSWORD
       - DB_NAME=$MONGODB_DATABASE

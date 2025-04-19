@@ -19,7 +19,7 @@ methods.connect = async () => {
 	if(typeof db !== "undefined") return;
 
 	// connect
-	mongoose.connect('mongodb://'+process.env.DB_USER+':'+process.env.DB_PASSWORD+'@mongodb:'+process.env.DB_PORT+'/admin', {
+	mongoose.connect('mongodb://'+process.env.DB_USER+':'+process.env.DB_PASSWORD+'@'+process.env.DB_HOST+':'+process.env.DB_PORT+'/admin', {
 		
 	});
 
