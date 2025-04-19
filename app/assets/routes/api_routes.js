@@ -56,13 +56,27 @@ let getRoutes = async () => {
 	});
 
 	router.get('/getRadar', async (req, res, next) => {
-		data = await db.getLatestRadar();
-		res.send(JSON.stringify(data));
+		key = "latest-radar-data";
+		cached = cache.get(key);
+		if(cached) {
+			res.send(cached)
+		} else {
+			data = await db.getLatestRadar();
+			cache.put(key, JSON.stringify(data), duration*1000);
+			res.send(JSON.stringify(data));
+		}
 	});
 
 	router.get('/getTrips', async (req, res, next) => {
-		data = await db.getLatestTrips();
-		res.send(JSON.stringify(data));
+		key = "latest-trips-data";
+		cached = cache.get(key);
+		if(cached) {
+			res.send(cached)
+		} else {
+			data = await db.getLatestTrips();
+			cache.put(key, JSON.stringify(data), duration*1000);
+			res.send(JSON.stringify(data));
+		}
 	});
 
 	router.get('/getTripById', async (req, res, next) => {
